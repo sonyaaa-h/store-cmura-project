@@ -5,14 +5,24 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../config/Config";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, collection, getDocs, setDoc, onSnapshot } from "firebase/firestore"; // Імпортуємо модульні методи Firestore
+import {
+    doc,
+    getDoc,
+    collection,
+    getDocs,
+    setDoc,
+    onSnapshot,
+} from "firebase/firestore"; // Імпортуємо модульні методи Firestore
+import FilteredProducts from "./FilteredProducts";
 
 const Home = () => {
     const [user, setUser] = useState(null); // Стан для збереження імені користувача
     const [products, setProducts] = useState([]);
     const [uid, setUid] = useState(null);
 
-    const[totalProducts, setTotalProducts] = useState(0);
+    const [totalProducts, setTotalProducts] = useState(0);
+
+    const [filterProducts, setFilterProducts] = useState([]);
 
     const history = useNavigate();
 
@@ -106,40 +116,54 @@ const Home = () => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 const cartRef = collection(db, "Cart", user.uid, "items");
-    
+
                 // Слухаємо зміни в колекції Cart
                 const unsubscribeSnapshot = onSnapshot(cartRef, (snapshot) => {
                     const qty = snapshot.docs.length; // Кількість документів у кошику
                     setTotalProducts(qty); // Оновлюємо кількість продуктів
                 });
-    
+
                 // Повертаємо функцію для відписки від onSnapshot
                 return () => unsubscribeSnapshot();
             }
         });
-    
+
         // Повертаємо функцію для відписки від onAuthStateChanged
         return () => unsubscribe();
     }, []);
-    
 
     return (
         <div className={s.wrapper}>
-            <Navbar user={user} totalProducts={totalProducts}/>
+            <Navbar user={user} totalProducts={totalProducts} />
             <br />
-            {products.length > 0 && (
-                <div className="container-fluid">
-                    <h1 className="text-center">Products</h1>
-                    <div className="products-box">
-                        <Products products={products} addToCart={addToCart} />
-                    </div>
+            <div className="filter-main-box">
+                <div>
+                    <h6>Choose a category</h6>
+                    <span>Electronics</span>
+                    <span>Fashion</span>
+                    <span>Home appliances</span>
+                    <span>Books</span>
+                    <span>Toys</span>
                 </div>
-            )}
-            {products.length < 1 && (
-                <div className="container-fluid">
-                    <h1 className="text-center">Please wait...</h1>
-                </div>
-            )}
+                {filterProducts.length > 0 && <FilteredProducts />}
+                {filterProducts.length < 1 && (
+                    <>
+                        {products.length > 0 && (
+                            <div className="container-fluid">
+                                <h1 className="text-center">All products</h1>
+                                <div className="products-box">
+                                    <Products products={products} addToCart={addToCart} />
+                                </div>
+                            </div>
+                        )}
+                        {products.length < 1 && (
+                            <div className="container-fluid">
+                                <h1 className="text-center">Please wait...</h1>
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
         </div>
     );
 };
