@@ -201,7 +201,7 @@ h1 {
   margin-left: 20px;
 }
 
-.cart-btn {
+.cart-btn.delete {
   width: 100px;
 }
 
@@ -232,5 +232,5 @@ h1 {
 
 .product-qty {
   width: 120px;
-  
+
 }

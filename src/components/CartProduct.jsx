@@ -60,7 +60,7 @@ const CartProduct = ({ product, cartProductIncrease, cartProductDecrease }) => {
             </div>
             <div className="product-text cart-price">Total price: ${product.TotalPrice}</div>
             <div
-                className="btn btn-danger cart-btn"
+                className="btn btn-danger cart-btn delete"
                 onClick={() => handleCartProductDelete(product)}
             >
                 Delete
