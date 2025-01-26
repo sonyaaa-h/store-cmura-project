@@ -245,3 +245,67 @@ h1 {
   width: 300px;
   margin: 20px auto 0;
 }
+
+.filter-main-box {
+  width: 100%;
+  display: flex;
+}
+
+.my-products {
+  flex: 3.3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  /* gap: 10px;
+  margin-left: 20px; */
+}
+
+.filter-box {
+  display: flex;
+  flex-direction: column;
+  padding-left: 15px;
+  width: 300px;
+  padding-top: 10px;
+}
+
+h6 {
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.filter-box span {
+  cursor: pointer;
+  margin: 15px 0;
+  font-size: 14px;
+}
+
+/* .filter-box span.electronics {
+  color: #9FA8DA;
+  font-size: 16px;
+}
+
+.filter-box span.fashion {
+  color: #9FA8DA;
+  font-size: 16px;
+}
+
+.filter-box span.homeappliances {
+  color: #9FA8DA;
+  font-size: 16px;
+}
+
+.filter-box span.books {
+  color: #9FA8DA;
+  font-size: 16px;
+}
+
+.filter-box span.toys {
+  color: #9FA8DA;
+  font-size: 16px; */
+/* } */
+
+.active {
+  color: #9FA8DA;
+  font-size: 16px;
+}

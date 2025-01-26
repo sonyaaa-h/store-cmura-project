@@ -22,7 +22,9 @@ const Home = () => {
 
     const [totalProducts, setTotalProducts] = useState(0);
 
-    const [filterProducts, setFilterProducts] = useState([]);
+    const [filterProducts, setFilterProducts] = useState([]); // Стейт для фільтруваних продуктів
+    const [active, setActive] = useState(""); // Стан для активної категорії
+    const [category, setCategory] = useState(""); // Стан для збереження вибраної категорії
 
     const history = useNavigate();
 
@@ -52,8 +54,6 @@ const Home = () => {
         return () => unsubscribe();
     }, []); // Запуск лише один раз при монтуванні компонента
 
-    // console.log("Current user:", user); // Лог для перевірки
-
     const getProducts = async () => {
         try {
             const products = await getDocs(collection(db, "products"));
@@ -64,7 +64,6 @@ const Home = () => {
                     ID: product.id,
                 };
             });
-
             setProducts(productList); // Після обробки всіх продуктів
         } catch (error) {
             console.error("Error fetching products:", error);
@@ -110,8 +109,6 @@ const Home = () => {
         return () => unsubscribe(); // Очищення підписки при відміні компонента
     }, []);
 
-    //totalProducts
-
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -132,20 +129,102 @@ const Home = () => {
         return () => unsubscribe();
     }, []);
 
+    const handleClick = (event) => {
+        const selectedCategory = event.target.id; // ID обраної категорії
+        setActive(selectedCategory);
+        setCategory(event.target.textContent); // Текст обраної категорії
+        filterFunction(selectedCategory); // Передаємо ID як ключ категорії
+    };
+
+    const filterFunction = (category) => {
+        if (products.length > 0) {
+            // Фільтруємо продукти за категорією
+            const filtered = products.filter(
+                (product) => product.category === category
+            );
+
+            if (filtered.length > 0) {
+                setFilterProducts(filtered); // Зберігаємо фільтровані продукти
+            } else {
+                console.log("No products found for this category");
+                setFilterProducts([]); // Очищуємо список, якщо нічого не знайдено
+            }
+        } else {
+            console.log("No products available to filter");
+        }
+    };
+
+    const returntoAllProducts = () => {
+        setActive("");
+        setCategory("");
+        setFilterProducts([]);
+    };
+
     return (
         <div className={s.wrapper}>
             <Navbar user={user} totalProducts={totalProducts} />
             <br />
             <div className="filter-main-box">
-                <div>
+                <div className="filter-box">
                     <h6>Choose a category</h6>
-                    <span>Electronics</span>
-                    <span>Fashion</span>
-                    <span>Home appliances</span>
-                    <span>Books</span>
-                    <span>Toys</span>
+                    <span
+                        id="electronics"
+                        onClick={handleClick}
+                        className={active === "electronics" ? "active" : ""}
+                    >
+                        Electronics
+                    </span>
+                    <span
+                        id="fashion"
+                        onClick={handleClick}
+                        className={active === "fashion" ? "active" : ""}
+                    >
+                        Fashion
+                    </span>
+                    <span
+                        id="home-appliances"
+                        onClick={handleClick}
+                        className={active === "homeappliances" ? "active" : ""}
+                    >
+                        Home appliances
+                    </span>
+                    <span
+                        id="books"
+                        onClick={handleClick}
+                        className={active === "books" ? "active" : ""}
+                    >
+                        Books
+                    </span>
+                    <span
+                        id="toys"
+                        onClick={handleClick}
+                        className={active === "toys" ? "active" : ""}
+                    >
+                        Toys
+                    </span>
                 </div>
-                {filterProducts.length > 0 && <FilteredProducts />}
+
+                {filterProducts.length > 0 && (
+                    <div className="my-products">
+                        <h1 className="text-center">{category}</h1>
+                        <a href="#" onClick={returntoAllProducts}>
+                            Go to all Products
+                        </a>
+                        <div className="products-box">
+                            {filterProducts.map(
+                                (product) => (
+                                    (
+                                        <FilteredProducts
+                                            key={product.ID}
+                                            product={product}
+                                            addToCart={addToCart}
+                                        />
+                                    )
+                                )
+                            )}
+                        </div>
+                    </div>
+                )}
                 {filterProducts.length < 1 && (
                     <>
                         {products.length > 0 && (
