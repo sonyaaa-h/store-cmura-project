@@ -234,3 +234,14 @@ h1 {
   width: 120px;
 
 }
+
+.summary-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 20px;
+  box-shadow: 5px 5px 4px #e4e4e4;
+  width: 300px;
+  margin: 20px auto 0;
+}

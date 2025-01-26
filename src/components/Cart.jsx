@@ -12,7 +12,7 @@ import {
     setDoc,
 } from "firebase/firestore";
 import CartProducts from "./CartProducts";
-// import StripeCheckout from "react-stripe-checkout";
+import StripeCheckout from "react-stripe-checkout";
 
 const Cart = () => {
     const [user, setUser] = useState(null);
@@ -151,9 +151,9 @@ const Cart = () => {
 
     //token
 
-    // const handleToken = (token) => {
-    //     console.log(token);
-    // };
+    const handleToken = (token) => {
+        console.log(token);
+    };
 
     return (
         <div>
@@ -169,7 +169,7 @@ const Cart = () => {
                             cartProductDecrease={cartProductDecrease}
                         />
                     </div>
-                    {/* <div className="summary-box">
+                    <div className="summary-box">
                         <h5>Cart summary</h5>
                         <br />
                         <div>
@@ -187,7 +187,7 @@ const Cart = () => {
                         name='All products'
                         amount={totalPrice * 100}
                         />
-                    </div> */}
+                    </div>
                 </div>
             )}
             {cartProducts.length < 1 && (
